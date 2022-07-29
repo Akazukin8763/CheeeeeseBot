@@ -9,7 +9,6 @@ class Bot(commands.Bot):
     def __init__(self):
         super().__init__(token=os.environ['ACCESS_TOKEN'],
                          client_id=os.environ['CLIENT_ID'],
-                         # client_secret=os.environ['CLIENT_SECRET'],
                          nick=os.environ['BOT_NICK'],
                          prefix=os.environ['BOT_PREFIX'],
                          initial_channels=os.environ['CHANNEL'].split(','))
@@ -45,5 +44,3 @@ if __name__ == '__main__':
     # https://twitchio.dev/en/latest/exts/commands.html#twitchio.ext.commands.Bot
     bot = Bot()
     bot.run()
-
-    # heroku ps:scale bot=1
