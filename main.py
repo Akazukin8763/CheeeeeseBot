@@ -31,6 +31,12 @@ class Bot(commands.Bot):
         print(f'{message.timestamp}: {message.author.name} - {message.content}')
         await self.handle_commands(message)
 
+    async def event_error(self, error: Exception, data: str = None):
+        print(f"Error: {error}")
+
+    async def event_command_error(self, context: commands.Context, error: Exception):
+        print(f"Error: {error}")
+
 
 if __name__ == '__main__':
     # https://twitchtokengenerator.com/
