@@ -8,7 +8,7 @@ class Draw(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name="早餐單")
+    @commands.command(name="早餐單", aliases=["breakfast"])
     async def _breakfast(self, ctx: commands.Context):
         # 早餐單
         吐司 = ["草莓吐司", "巧克力吐司", "奶油吐司", "花生吐司", "奶酥厚片",
