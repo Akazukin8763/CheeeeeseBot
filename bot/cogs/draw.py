@@ -79,6 +79,56 @@ class Draw(commands.Cog):
         else:
             await ctx.reply("【 StinkyGlitch 】不吃")
 
+    @commands.command(name="求籤", aliases=["fortune"])
+    async def _fortune(self, ctx: commands.Context):
+        # 先求出籤，再看是否需要紀錄至資料庫中
+        籤序 = ["大吉", "中吉", "小吉", "吉", "末吉", "凶", "大凶"]
+        random.shuffle(籤序)
+        籤運 = 籤序[0]
+
+        # 資料庫基本資料
+        user = ctx.author.name
+        channel = ctx.channel.name
+        timestamp = ctx.message.timestamp
+        collection_fortune = self.bot.db[channel]["fortune"]
+
+        # 確認使用者是否存在於資料表中
+        query = {"user": user}
+        contain = {"_id": 0}
+        fortune = collection_fortune.find_one(query, contain)
+
+        if fortune is None:  # 使用者從未被記錄於資料表（從未求過籤），回傳求籤結果並寫入
+            # 新增記錄至資料表
+            query = {
+                "user": user,
+                "type": 籤運,
+                "timestamp": timestamp
+            }
+            collection_fortune.insert_one(query)
+
+            # 輸出結果
+            await ctx.reply("【 StinkyGlitch 】" + 籤運)
+        else:  # 使用者有紀錄，查看今日是否求過籤
+            current_date = timestamp.date()
+            last_date = fortune["timestamp"].date()
+
+            if current_date == last_date:  # 今天已求過籤，回傳紀錄
+                # 輸出結果
+                await ctx.reply("【 StinkyGlitch 】每日一籤，籤運紀錄為：" + fortune["type"])
+            else:  # 今日尚未求籤，回傳求籤結果並寫入
+                # 更新記錄至資料表
+                query = {
+                    "user": user
+                }
+                update = {"$set": {
+                    "type": 籤運,
+                    "timestamp": timestamp
+                }}
+                collection_fortune.update_one(query, update)
+
+                # 輸出結果
+                await ctx.reply("【 StinkyGlitch 】" + 籤運)
+
 
 def prepare(bot: commands.Bot):
     bot.add_cog(Draw(bot))
