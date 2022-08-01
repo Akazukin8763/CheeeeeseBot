@@ -1,3 +1,4 @@
 python-dotenv~=0.20.0
 twitchio~=2.3.0
 websocket
+pymongo[tls,srv]~=4.2.0

@@ -3,11 +3,16 @@ import glob
 from twitchio.ext import commands
 
 from config import Config
+from database import Database
 
 
 class Bot(commands.Bot):
 
+    __slots__ = ['db', ]
+
     def __init__(self):
+        self.db = Database(self)
+
         super().__init__(token=Config.ACCESS_TOKEN,
                          client_id=Config.CLIENT_ID,
                          nick=Config.BOT_NICK,
@@ -29,6 +34,12 @@ class Bot(commands.Bot):
 
         print("Running bot ...")
         super().run()
+
+    async def close(self):
+        self.db.close()
+
+        print("Shut down ...")
+        await super().close()
 
     async def event_ready(self):
         print(f"Logged in as <{self.nick}>")
