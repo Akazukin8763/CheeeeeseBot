@@ -36,6 +36,9 @@ class Bot(commands.Bot):
         super().run()
 
     async def close(self):
+        # 關閉排程
+        self.get_cog("Routines").cog_unload()
+        # 關閉資料庫連結
         self.db.close()
 
         print("Shut down ...")
