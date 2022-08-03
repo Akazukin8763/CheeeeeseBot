@@ -39,6 +39,8 @@ class Database:
 
             self._channels[db] = data
 
+        print("Database refresh ...")
+
     def commit(self) -> None:
         # 寫入每個頻道的資料庫
         for db in self.client.list_database_names():
@@ -58,8 +60,7 @@ class Database:
                 if len(updates) > 0:
                     self.client[db][coll].bulk_write(updates)
 
-        # 將資料表重新讀出
-        self.refresh()
+        print("Database commit ...")
 
     def get_doc(self, channel: str, doc_name: str):
         return self._channels[channel][doc_name]

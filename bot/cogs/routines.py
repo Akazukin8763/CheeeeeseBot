@@ -7,14 +7,15 @@ class Routines(commands.Cog):
         self.bot = bot
 
         self.bot.db.refresh()
-        self._database_commit.start()
+        self._database_backup.start()
 
     def cog_unload(self):
-        self._database_commit.cancel()
+        self._database_backup.cancel()
 
     @routines.routine(hours=12, wait_first=True)
-    async def _database_commit(self):
+    async def _database_backup(self):
         self.bot.db.commit()
+        self.bot.db.refresh()
 
 
 def prepare(bot: commands.Bot):
